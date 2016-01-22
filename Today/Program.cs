@@ -15,8 +15,13 @@ namespace Today
             date_formats["-iso"] = "yyyy-MM-dd";
             date_formats["-us"] = "M/d/yyyy";
 
-            if (args.Count() != 1) 
+            if (args.Count() != 1 || !date_formats.ContainsKey(args[0]))
+            {
+#if DEBUG
+                Console.WriteLine("Arguments given:\n\t" + string.Join("\n\t", args) + "\n\n   -----\n"); 
+#endif
                 Print_usage_info();
+            }
             else
             {
                 var arg = args[0];
