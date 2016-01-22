@@ -7,15 +7,15 @@ namespace Today
 {
     class Program
     {
-        static Dictionary<string, string> date_formats = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> Date_formats = new Dictionary<string, string>();
 
         [STAThread]
         static void Main(string[] args)
         {
-            date_formats["-iso"] = "yyyy-MM-dd";
-            date_formats["-us"] = "M/d/yyyy";
+            Date_formats["-iso"] = "yyyy-MM-dd";
+            Date_formats["-us"] = "M/d/yyyy";
 
-            if (args.Count() != 1 || !date_formats.ContainsKey(args[0]))
+            if (args.Count() != 1 || !Date_formats.ContainsKey(args[0]))
             {
 #if DEBUG
                 Console.WriteLine("Arguments given:\n\t" + string.Join("\n\t", args) + "\n\n   -----\n"); 
@@ -24,22 +24,19 @@ namespace Today
             }
             else
             {
-                var arg = args[0];
-                if (!date_formats.ContainsKey(arg)) Print_usage_info();
+                var format = Date_formats[args[0]];
 
-                Date_to_clipboard(arg);
+                Date_to_clipboard(format);
             }
         }
 
         /// <summary>
         /// Sends the current date to the clipboard.
         /// </summary>
-        /// <param name="arg"></param>
-        private static void Date_to_clipboard(string arg)
+        /// <param name="format">DateTime format specification; see http://www.dotnetperls.com/datetime-format</param>
+        private static void Date_to_clipboard(string format)
         {
-            var today = "";
-            var format = date_formats[arg];
-            today = DateTime.Now.ToString(format);
+            var today = DateTime.Now.ToString(format);
 
             Clipboard.SetText(today);
         }
@@ -53,7 +50,7 @@ namespace Today
                 "Invalid arguments.\n\nThis program copies today's date in a specified format to the Windows clipboard.\n\nPlease use exactly one of the following arguments:");
             
             // Prints all the currently supported formats
-            foreach (var kvp in date_formats)
+            foreach (var kvp in Date_formats)
                 Console.WriteLine("  " + kvp.Key + "\t for \t" + kvp.Value);
 
             Console.WriteLine("\nPress any key to exit...");
