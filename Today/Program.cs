@@ -13,19 +13,24 @@ namespace Today
         static void Main(string[] args)
         {
             date_formats["-iso"] = "yyyy-MM-dd";
-            date_formats["-us"] = "MM/dd/yyyy";
+            date_formats["-us"] = "M/d/yyyy";
 
-            if (args.Count() != 1) Handle_bad_arguments();
+            if (args.Count() != 1) 
+                Print_usage_info();
             else
             {
                 var arg = args[0];
-                if (!date_formats.ContainsKey(arg)) Handle_bad_arguments();
+                if (!date_formats.ContainsKey(arg)) Print_usage_info();
 
-                Handle_good_arguments(arg);
+                Date_to_clipboard(arg);
             }
         }
 
-        private static void Handle_good_arguments(string arg)
+        /// <summary>
+        /// Sends the current date to the clipboard.
+        /// </summary>
+        /// <param name="arg"></param>
+        private static void Date_to_clipboard(string arg)
         {
             var today = "";
             var format = date_formats[arg];
@@ -34,12 +39,18 @@ namespace Today
             Clipboard.SetText(today);
         }
 
-        private static void Handle_bad_arguments()
+        /// <summary>
+        /// Prints usage information (mainly for providing a helpful response when user provides a bad argument).
+        /// </summary>
+        private static void Print_usage_info()
         {
             Console.WriteLine(
                 "Invalid arguments.\n\nThis program copies today's date in a specified format to the Windows clipboard.\n\nPlease use exactly one of the following arguments:");
+            
+            // Prints all the currently supported formats
             foreach (var kvp in date_formats)
                 Console.WriteLine("  " + kvp.Key + "\t for \t" + kvp.Value);
+
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadLine();
         }
